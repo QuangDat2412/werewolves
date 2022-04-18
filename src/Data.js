@@ -141,7 +141,6 @@ export const Steps = [
         time: 0,
     },
 ];
-const Faction = {};
 
 export const Rule = [
     {

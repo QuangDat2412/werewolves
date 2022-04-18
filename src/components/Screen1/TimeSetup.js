@@ -81,7 +81,7 @@ const TimeSetup = () => {
             dispatch(wereWolfActions.setCurrentStep(steps[0]));
             navigate('../play', { replace: true });
         }
-    }, [steps]);
+    }, [steps, dispatch, navigate]);
     const handleStepFinal = async () => {
         dispatch(wereWolfActions.setDayTimerDefault(timeState));
         dispatch(wereWolfActions.setSteps(checked));
