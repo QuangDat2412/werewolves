@@ -82,7 +82,7 @@ const TimeSetup = () => {
             navigate('../play', { replace: true });
         }
     }, [steps, dispatch, navigate]);
-    const handleStepFinal = async () => {
+    const handleStepFinal = () => {
         dispatch(wereWolfActions.setDayTimerDefault(timeState));
         dispatch(wereWolfActions.setSteps(checked));
     };

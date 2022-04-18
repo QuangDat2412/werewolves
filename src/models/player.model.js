@@ -26,7 +26,7 @@ export class DetailModel {
         this.id = data.id || '';
         this.killBywolf = [];
         this.killByHunter = [];
-        this.killByagree = [];
+        this.killByAgree = [];
         this.killBywitch = [];
         this.helpByWitch = [];
         this.helpByGuard = [];

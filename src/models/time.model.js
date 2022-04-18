@@ -7,14 +7,17 @@ export class TimeModel {
 
         this.name = data.name || '';
         this.time = parseInt(data.time) || 0;
-        this.desc = this.getStep() || {};
+        this.step = this.getStep() || {};
+        this.type = this.step.type || 0;
+        this.title = this.step.title || '';
+        this.desc = this.step.desc || '';
+        this.actions = this.step.actions;
+        this.kill = this.step.kill || 0;
+        this.help = this.step.help || 0;
     }
     getStep() {
         const step = StepsDay.find((item) => item.name === this.name);
-        console.log(step);
-        const { type, title, desc, actions } = step;
-        const _step = { type: type, title: title, desc: desc, actions: actions };
 
-        return _step;
+        return step;
     }
 }

@@ -32,14 +32,14 @@ const wereWolfSlice = createSlice({
                 }
                 if (detail.helpByWitch.length > 0) {
                     let _playersWithRole = [];
-                    const player = state.playersWithRole.find((p) => p.id === parseInt(detail.helpByWitch[0]));
+                    const player = state.playersWithRole.find((p) => p.id === detail.helpByWitch[0]);
                     if (player.rule === 10) {
                         const a = state.details.find((d) => {
                             return d.id === `${state.day}.${state.currentStep.type}.wolf`.trim();
                         });
                         debugger;
                         _playersWithRole = state.playersWithRole.map((e) => {
-                            if (e.id !== parseInt(a.killByHunter[0])) {
+                            if (e.id !== a.killByHunter[0]) {
                                 return e;
                             } else {
                                 return { ...e, lives: e.lives + 2 };
@@ -47,7 +47,7 @@ const wereWolfSlice = createSlice({
                         });
                     }
                     _playersWithRole = _playersWithRole.map((e) => {
-                        if (e.id !== parseInt(detail.helpByWitch[0])) {
+                        if (e.id !== detail.helpByWitch[0]) {
                             return e;
                         } else {
                             return { ...e, lives: e.lives + 1 };
@@ -61,10 +61,10 @@ const wereWolfSlice = createSlice({
                     let _playersWithRole = [];
                     detail.killBywolf.map((id) => {
                         _playersWithRole = state.playersWithRole.map((e) => {
-                            if (e.id !== parseInt(id)) {
+                            if (e.id !== id) {
                                 return e;
-                            } else if (state.bodyguard === parseInt(id) && state.currentStep.type === 2) {
-                                const player = state.playersWithRole.find((p) => p.id === parseInt(state.bodyguard));
+                            } else if (state.bodyguard === id && state.currentStep.type === 2) {
+                                const player = state.playersWithRole.find((p) => p.id === state.bodyguard);
                                 state.bodyguard = 0;
                                 if (player.rule === 10) {
                                     state.details = state.details.map((d) => {
@@ -87,16 +87,16 @@ const wereWolfSlice = createSlice({
                     _playersWithRole.sort((a, b) => b.lives - a.lives);
                     state.playersWithRole = _playersWithRole;
                 }
-                const ids = [...detail.killBywitch, ...detail.killByHunter, ...detail.killByagree];
+                const ids = [...detail.killBywitch, ...detail.killByHunter, ...detail.killByAgree];
                 if (ids.length > 0) {
                     let _playersWithRole = [];
                     ids.map((id) => {
                         _playersWithRole = state.playersWithRole.map((e) => {
-                            if (e.id !== parseInt(id)) {
+                            if (e.id !== id) {
                                 return e;
-                            } else if (state.bodyguard === parseInt(id) && state.currentStep.type === 2) {
+                            } else if (state.bodyguard === id && state.currentStep.type === 2) {
                                 state.bodyguard = 0;
-                                const player = state.playersWithRole.find((p) => p.id === parseInt(state.bodyguard));
+                                const player = state.playersWithRole.find((p) => p.id === state.bodyguard);
                                 if (player.rule === 10) {
                                     state.details = state.details.map((d) => {
                                         if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
@@ -119,7 +119,6 @@ const wereWolfSlice = createSlice({
                 }
             }
             state.currentStep = payload;
-            debugger;
             const a = new DetailModel({ id: `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim() });
             if (state.currentStep.actions) {
                 state.details = [...state.details, a];
@@ -130,7 +129,7 @@ const wereWolfSlice = createSlice({
                 state.bodyguard = 0;
             }
         },
-        reset: (state) => {
+        resetStep: (state) => {
             const { day, currentStep, details } = state;
             state.details = details.map((d) => {
                 if (d.id !== `${day}.${currentStep.type}.${currentStep.name}`.trim()) {
@@ -140,6 +139,15 @@ const wereWolfSlice = createSlice({
                     return a;
                 }
             });
+        },
+        resetGame: (state) => {
+            state.details = [];
+            state.day = 1;
+            state.bodyguard = 0;
+            state.playersWithRole = [];
+            state.steps = [];
+            state.currentStep = {};
+            state.couple = [];
         },
         setPlayers: (state, { payload }) => {
             const players = payload.map((e) => new PlayerModel(e));

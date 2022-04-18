@@ -40,6 +40,7 @@ const ItemPlayer = ({ player, listPlayer }) => {
         );
     };
     const currentDetail = details.find((d) => d.id === `${day}.${currentStep.type}.${currentStep.name}`.trim()) || {};
+
     const showButton = (e, idx) => {
         switch (e) {
             case 'kill':
@@ -104,7 +105,7 @@ const ItemPlayer = ({ player, listPlayer }) => {
                     </Fragment>
                 );
             case 'guard':
-                const x = details.find((d) => d.id === `${day - 1}.${currentStep.type}.${currentStep.name}`);
+                const x = details.find((d) => d.id === `${day - 1}.${currentStep.type}.${currentStep.name}`.trim());
                 return (
                     <Fragment key={idx}>
                         {(day === 1 || x.helpByGuard[0] !== player.id) && currentDetail.helpByGuard.length < 1 && (
