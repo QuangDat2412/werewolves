@@ -1,0 +1,25 @@
+.player-item {
+    background-image: linear-gradient(to right, #88a8e0, #20661d);
+    border-radius: 5px;
+    font-size: 16px;
+    overflow: hidden;
+}
+
+.row-list-player + .row-list-player {
+    margin-top: 8px;
+}
+.img {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    background-size: cover;
+    vertical-align: middle;
+    border-style: none;
+}
+.avatar {
+    padding-top: 100%;
+    position: relative;
+}

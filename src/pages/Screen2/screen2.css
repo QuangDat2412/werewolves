@@ -1,0 +1,8 @@
+.screen2 {
+    min-height: 100vh;
+}
+.mask {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
