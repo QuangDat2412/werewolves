@@ -72,13 +72,14 @@ const ItemPlayer = ({ player, listPlayer }) => {
                     </Fragment>
                 );
             case 'help':
-                const soican = details.find((d) => d.id === `${day}.${currentStep.type}.wolf`.trim());
+                const soican = details.find((d) => d.id === `${day}.${currentStep.type}.wolf`.trim()) || {};
 
                 const checkHelp =
                     oldManLive &&
                     checkLive &&
                     currentDetail.helpByWitch?.length < currentStep?.help &&
-                    soican.killBywolf.find((id) => id === player.id);
+                    soican?.killBywolf &&
+                    soican?.killBywolf.find((id) => id === player.id);
                 return (
                     <Fragment key={idx}>
                         {checkHelp && (
