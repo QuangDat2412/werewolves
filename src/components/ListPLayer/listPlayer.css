@@ -8,6 +8,18 @@
 .row-list-player + .row-list-player {
     margin-top: 8px;
 }
+.box-btn-action {
+    bottom: 90px;
+    right: 10px;
+    position: absolute;
+}
+.img-tim {
+    object-fit: cover;
+    background-size: cover;
+    vertical-align: middle;
+    border-style: none;
+    width: 30px;
+}
 .img {
     width: 100%;
     position: absolute;
@@ -22,4 +34,10 @@
 .avatar {
     padding-top: 100%;
     position: relative;
+}
+
+.player-desc {
+    padding: 10px;
+    font-weight: 500;
+    color: #000 !important;
 }

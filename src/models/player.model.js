@@ -10,7 +10,7 @@ export class PlayerModel {
         this.rule_detail = this.getRule() || {};
         this.imageUrl = this.rule_detail.imageUrl || '';
         this.rule_name = this.rule_detail.name || '';
-        this.lives = this.rule === 11 || this.rule === 9 ? 2 : 1;
+        this.lives = this.rule === 11 ? 2 : 1;
         this.rule_description = this.rule_detail.description || '';
     }
     getRule() {
@@ -23,11 +23,16 @@ export class DetailModel {
         if (!data) {
             data = {};
         }
-        this.id = data.id || '';
+        this.id = `${data.day}.${data.type}.${data.name}`.trim();
+        this.day = data.day || 0;
+        this.name = data.name || 0;
+        this.type = data.type || 0;
         this.killBywolf = [];
-        this.killByHunter = [];
+        this.killByhunter = [];
+        this.selectByhunter = [];
         this.killByAgree = [];
         this.killBywitch = [];
+        this.killCouple = [];
         this.helpByWitch = [];
         this.helpByGuard = [];
         this.coupleByCupid = [];

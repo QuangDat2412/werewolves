@@ -1,0 +1,72 @@
+.detail {
+    outline-style: none;
+    color: rgba(3, 2, 2, 0.788);
+}
+
+h1,
+h2 {
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 6em;
+    padding-top: 30px;
+    font-family: 'Anek Odia', sans-serif;
+    font-weight: bolder;
+    line-height: 1.167;
+    letter-spacing: -0.01562em;
+    color: #00254c;
+    font-weight: 700;
+    text-align: center;
+    margin: 0;
+}
+h2 {
+    font-size: 3em;
+    margin-top: -90px;
+    margin-bottom: 40px;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+th,
+td {
+    width: 10em;
+    border-top: 1px solid;
+}
+td {
+    border-left: 1px solid;
+}
+th {
+    border-right: 1px solid;
+}
+.MuiBox-root {
+    outline-style: none;
+    width: 100%;
+    background-image: none;
+}
+.MuiTable-root {
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 5px 5px 5px 5px rgb(0 0 0 / 20%);
+    background-color: #fff;
+}
+#root .table {
+    font-weight: 100;
+    box-shadow: 1;
+}
+@media (max-width: 1024px) {
+    * {
+        font-size: y-large;
+    }
+    .MuiTable-root {
+        font: 3em;
+        font-weight: 1em;
+    }
+}
+
+.box-btn--newgame {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}

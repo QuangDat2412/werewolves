@@ -70,11 +70,6 @@ const TimeSetup = () => {
 
     const handleCheckedDayNight = (e) => {
         setChecked(e.target.checked);
-        if (checked) {
-            console.log('day');
-        } else {
-            console.log('night');
-        }
     };
     useEffect(() => {
         if (steps[0]) {

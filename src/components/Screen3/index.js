@@ -1,45 +1,25 @@
 import React from 'react';
+import './index.css';
+import Projects from './components/CardLoser';
+import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
 const Screen3 = () => {
+    let navigate = useNavigate();
+
+    const countdown = () => {
+        navigate('../setup/step3', { replace: true });
+    };
     return (
-        <>
-            <div>
-                <h1> Winner</h1>
-                <h2> Congratulation: </h2>
+        <div>
+            <h1 className="title"> Final result</h1>
+            <div className="box-btn--newgame">
+                <Button onClick={countdown} type="primary">
+                    NewGame
+                </Button>
             </div>
-            <div>
-                <table>
-                    <tr>
-                        <th>Player</th>
-                        <th>Reason</th>
-                    </tr>
-                    <tr>
-                        <td>A</td>
-                        <td>M</td>
-                    </tr>
-                    <tr>
-                        <td>Ce</td>
-                        <td>France</td>
-                    </tr>
-                    <tr>
-                        <td>E</td>
-                        <td>R</td>
-                    </tr>
-                    <tr>
-                        <td>i</td>
-                        <td>UK</td>
-                    </tr>
-                    <tr>
-                        <td>Yoshi</td>
-                        <td>Canada</td>
-                    </tr>
-                    <tr>
-                        <td>G</td>
-                        <td>I</td>
-                    </tr>
-                </table>
-            </div>
-        </>
+            <Projects />
+        </div>
     );
 };
-
 export default Screen3;

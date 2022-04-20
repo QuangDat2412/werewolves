@@ -1,51 +1,3 @@
-export const Users = [
-    {
-        id: 1,
-        rule: 11,
-        name: 'Dat1',
-    },
-    {
-        id: 2,
-        rule: 8,
-        name: 'Dat2',
-    },
-    {
-        id: 3,
-        rule: 10,
-        name: 'Dat3',
-    },
-    {
-        id: 4,
-        rule: 6,
-        name: 'Dat4',
-    },
-    {
-        id: 5,
-        rule: 5,
-        name: 'Dat5',
-    },
-    {
-        id: 6,
-        rule: 4,
-        name: 'Dat6',
-    },
-    {
-        id: 7,
-        rule: 10,
-        name: 'Dat7',
-    },
-    {
-        id: 8,
-        rule: 5,
-        name: 'Dat8',
-    },
-    {
-        id: 9,
-        rule: 10,
-        name: 'Dat8',
-    },
-];
-
 export const StepsDay = [
     {
         type: 1,
@@ -76,12 +28,14 @@ export const StepsDay = [
         time: 30,
         actions: ['kill'],
         kill: 1,
+        player: [-1],
     },
 ];
 export const StepsNight = [
     {
         type: 2,
-        name: 'cupid ',
+        name: 'cupid',
+        player: [5],
         title: 'Cupid hãy chọn cặp yêu nhau',
         desc: 'Thần tình yêu hãy thức dậy và lựa chọn cặp đôi yêu nhau.',
         time: 60,
@@ -91,6 +45,7 @@ export const StepsNight = [
     {
         type: 2,
         name: 'couple',
+        player: [5],
         time: 30,
         isFirst: true,
         title: 'Cặp đôi yêu nhau gặp mặt',
@@ -99,13 +54,25 @@ export const StepsNight = [
     {
         type: 2,
         name: 'seek',
+        player: [2],
         title: 'Tiên tri hãy dậy đi nào.',
         desc: 'Tiên tri hãy chỉ ra người muốn soi.',
         time: 30,
     },
     {
         type: 2,
-        name: 'guard ',
+        name: 'hunter',
+        player: [10],
+        title: 'Thợ săn hãy dậy đi nào.',
+        desc: 'Thợ săn hãy chọn ra người sẽ chết cùng.',
+        time: 30,
+        actions: ['select'],
+        select: 1,
+    },
+    {
+        type: 2,
+        name: 'guard',
+        player: [4],
         title: 'Bảo vệ hãy chọn ra người được bảo vệ',
         desc: 'Bảo vệ có thể lựa chọn người mình muốn bảo vệ.',
         time: 30,
@@ -113,7 +80,8 @@ export const StepsNight = [
     },
     {
         type: 2,
-        name: 'wolf ',
+        name: 'wolf',
+        player: [6, 7, 8],
         title: 'Sói ơi hãy dậy đi nào',
         desc: 'Sói hãy chọn ra con mồi mình muốn giết',
         time: 30,
@@ -123,22 +91,13 @@ export const StepsNight = [
     {
         type: 2,
         name: 'witch',
+        player: [3],
         title: 'Phù thủy hãy dậy đi nào',
         desc: 'Phù Thủy hãy dùng những lọ thuốc của mình để cứu hoặc giết người mình muốn.',
         time: 30,
         actions: ['kill', 'help'],
         kill: 1,
         help: 1,
-    },
-];
-export const Steps = [
-    ...StepsNight,
-    ...StepsDay,
-    {
-        type: 1,
-        name: 'endday',
-        title: 'Chuẩn bị cho ngày mới',
-        time: 0,
     },
 ];
 
@@ -184,19 +143,6 @@ export const Rule = [
             'Vào ban đêm, Ma sói sẽ tỉnh dậy cùng nhau và thống nhất giết 1 nạn nhận nào đó. Sói có thể không giết người nào và không được giết sói khác.',
     },
     {
-        id: 7,
-        name: 'Sói cô đơn',
-        imageUrl: '/static/soicodon.png',
-        description: 'Hằng đêm, thức dậy cùng những con Sói khác. Sói cô đơn chỉ thắng cuộc nếu là người chơi cuối cùng trong trò chơi.',
-    },
-    {
-        id: 8,
-        name: 'Sói con',
-        imageUrl: '/static/soicon.png',
-        description:
-            'Sói con là Sói và thức dậy cùng Sói mỗi đêm. Nếu Sói con bị giết, Sói còn lại sẽ giết 2 người vào đêm hôm sau. Sói có thể chọn giết Sói Con như 1 sự hy sinh ( Tất cả Sói bao gồm cả Sói con đều đồng ý việc đó). Khi đó Sói có thể lập tức giết 2 người chơi khác vào ngay đêm hôm đó.',
-    },
-    {
         id: 9,
         name: 'Người cứng cỏi',
         imageUrl: '/static/ngcungcoi.png',
@@ -208,11 +154,16 @@ export const Rule = [
         imageUrl: '/static/thosan.png',
         description: 'Thợ săn mỗi đêm được thức dậy để giết 1 người',
     },
-
     {
         id: 11,
         name: 'Già làng',
         imageUrl: '/static/gialang.png',
         description: 'Già Làng sẽ có 2 mạng sống. Nếu như Già Làng chết thì mọi quyền năng đều sẽ mất hiệu lực, ví dụ quyền năng Bảo vệ, Tiên tri',
+    },
+    {
+        id: 14,
+        name: 'Người bệnh',
+        imageUrl: '/static/nguoibenh.jpg',
+        description: 'Nếu Người bệnh bị Sói cắn, thì vào đêm tiếp theo sói sẽ không thể cắn người nào khác.',
     },
 ];

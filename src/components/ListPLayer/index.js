@@ -8,7 +8,7 @@ const ListPlayer = () => {
     const listPlayer = useSelector(wereWolfSelector.playersWithRole);
 
     const showData = () => {
-        if (!listPlayer || listPlayer.length === 0) return <Empty />;
+        if (!listPlayer || listPlayer?.length === 0) return <Empty />;
         const _listPlayer = makeChunkArray(listPlayer, 2);
         const mapSubList = (subList) =>
             subList.map((item, idx) => {

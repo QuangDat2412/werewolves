@@ -14,6 +14,7 @@ export class TimeModel {
         this.actions = this.step.actions;
         this.kill = this.step.kill || 0;
         this.help = this.step.help || 0;
+        this.player = this.step.player || [];
     }
     getStep() {
         const step = StepsDay.find((item) => item.name === this.name);
