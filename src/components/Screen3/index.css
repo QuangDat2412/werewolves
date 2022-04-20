@@ -27,17 +27,6 @@ h2 {
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
-th,
-td {
-    width: 10em;
-    border-top: 1px solid;
-}
-td {
-    border-left: 1px solid;
-}
-th {
-    border-right: 1px solid;
-}
 .MuiBox-root {
     outline-style: none;
     width: 100%;
@@ -48,6 +37,11 @@ th {
     padding: 25px;
     box-shadow: 5px 5px 5px 5px rgb(0 0 0 / 20%);
     background-color: #fff;
+}
+.MuiGrid-root.box-center {
+    max-width: 1080px;
+    width: 100%;
+    margin: 0 auto;
 }
 #root .table {
     font-weight: 100;

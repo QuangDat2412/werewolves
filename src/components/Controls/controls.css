@@ -11,7 +11,7 @@
 }
 
 .content {
-    height: 400px;
+    min-height: 400px;
     margin-top: 20px;
     position: relative;
     padding: 20px;

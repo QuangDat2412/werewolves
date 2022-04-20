@@ -26,16 +26,87 @@ const wereWolfSlice = createSlice({
             state.currentStep = payload;
             const model = new DetailModel({ day: state.day, type: state.currentStep.type, name: state.currentStep.name });
             state.details = [...state.details, model];
+            let _playersWithRole = state.playersWithRole;
+            if (state.hunter?.length === 2 && state.currentStep.name === 'endday') {
+                const checkHunterDie = _playersWithRole.find((p) => p.id === state.hunter[1]).lives < 1;
+                if (checkHunterDie) {
+                    _playersWithRole = _playersWithRole.map((e) => {
+                        if (e.id !== state.hunter[0]) {
+                            return e;
+                        } else if (e.lives > 0) {
+                            state.details = state.details.map((d) => {
+                                if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
+                                    return d;
+                                } else {
+                                    return { ...d, killByhunter: [state.hunter[0]] };
+                                }
+                            });
+                            state.died = [
+                                ...state.died,
+                                {
+                                    day: state.day,
+                                    type: state.currentStep.type,
+                                    id: e.id,
+                                    name: 'killByhunter',
+                                    message: 'đã chết vì bị thợ săn bắn chết',
+                                },
+                            ];
+                            return { ...e, lives: e.lives - 2 };
+                        } else {
+                            return e;
+                        }
+                    });
+                    const checkCoupleDie = state.couple.reduce((p, c) => {
+                        const x = _playersWithRole.find((p) => p.id === c);
+                        return p || x.lives < 1;
+                    }, false);
+                    if (checkCoupleDie) {
+                        state.details = state.details.map((d) => {
+                            if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
+                                return d;
+                            } else {
+                                const die = _playersWithRole.find((p) => p.id === state.couple[0]).lives < 1;
+                                if (die) {
+                                    return { ...d, killCouple: [state.couple[1]] };
+                                } else {
+                                    return { ...d, killCouple: [state.couple[0]] };
+                                }
+                            }
+                        });
+                        state.couple.map((id) => {
+                            _playersWithRole = _playersWithRole.map((e) => {
+                                if (e.id !== id) {
+                                    return e;
+                                } else if (e.lives > 0) {
+                                    state.died = [
+                                        ...state.died,
+                                        {
+                                            day: state.day,
+                                            type: state.currentStep.type,
+                                            id: e.id,
+                                            name: 'killCouple',
+                                            message: 'đã chết vì người yêu bị giết',
+                                        },
+                                    ];
+                                    return { ...e, lives: e.lives - 2 };
+                                } else {
+                                    return e;
+                                }
+                            });
+                            return 0;
+                        });
+                    }
+                }
+            }
             if (payload.name === 'endday') {
                 state.day = state.day + 1;
                 state.steps = state.steps.filter((step) => !step.isFirst);
                 state.bodyguard = 0;
             }
-
             if (state.youngStrongMan !== 0 && state.youngStrongMan + 1 === state.day) {
                 const youngStrongMan = state.playersWithRole.find((p) => p.rule === 9) || {};
 
-                const _playersWithRole = state.playersWithRole.map((e) => {
+                _playersWithRole = _playersWithRole.map((e) => {
                     if (e.id !== youngStrongMan.id) {
                         return e;
                     } else {
@@ -52,10 +123,11 @@ const wereWolfSlice = createSlice({
                         return { ...e, lives: e.lives - 1 };
                     }
                 });
-                _playersWithRole.sort((a, b) => b.lives - a.lives);
-                state.playersWithRole = _playersWithRole;
                 state.youngStrongMan = 0;
             }
+            _playersWithRole.sort((a, b) => b.lives - a.lives);
+
+            state.playersWithRole = _playersWithRole;
         },
         doActionSuccess: (state) => {
             const title = `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim();
@@ -67,6 +139,7 @@ const wereWolfSlice = createSlice({
             const youngStrongMan = _playersWithRole.find((p) => p.rule === 9) || {};
             const hunter = _playersWithRole.find((p) => p.rule === 10) || {};
             const oldMan = _playersWithRole.find((p) => p.rule === 11) || {};
+            const diseased = _playersWithRole.find((p) => p.rule === 14) || {};
 
             if (detail) {
                 if (detail.coupleByCupid?.length > 0) {
@@ -157,6 +230,45 @@ const wereWolfSlice = createSlice({
                                 return { ...e, lives: e.lives - 1 };
                             }
                         });
+                        if (state.couple.find((c) => c.id === id)) {
+                            state.details = state.details.map((d) => {
+                                if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
+                                    return d;
+                                } else {
+                                    const die = _playersWithRole.find((p) => p.id === state.couple[0]).lives < 1;
+                                    if (die) {
+                                        return { ...d, killCouple: [state.couple[1]] };
+                                    } else {
+                                        return { ...d, killCouple: [state.couple[0]] };
+                                    }
+                                }
+                            });
+                            state.couple.map((id) => {
+                                _playersWithRole = _playersWithRole.map((e) => {
+                                    if (e.id !== id) {
+                                        return e;
+                                    } else if (e.lives > 0) {
+                                        state.died = [
+                                            ...state.died,
+                                            {
+                                                day: state.day,
+                                                type: state.currentStep.type,
+                                                id: e.id,
+                                                name: 'killCouple',
+                                                message: 'đã chết vì người yêu bị giết',
+                                            },
+                                        ];
+                                        return { ...e, lives: e.lives - 2 };
+                                    } else {
+                                        return e;
+                                    }
+                                });
+                                return 0;
+                            });
+                        }
+                        if (diseased.id === id) {
+                            state.diseased = state.day;
+                        }
                         return 0;
                     });
                 }
@@ -201,6 +313,42 @@ const wereWolfSlice = createSlice({
                                 return { ...e, lives: e.lives - 2 };
                             }
                         });
+                        if (state.couple.find((c) => c.id === id)) {
+                            state.details = state.details.map((d) => {
+                                if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
+                                    return d;
+                                } else {
+                                    const die = _playersWithRole.find((p) => p.id === state.couple[0]).lives < 1;
+                                    if (die) {
+                                        return { ...d, killCouple: [state.couple[1]] };
+                                    } else {
+                                        return { ...d, killCouple: [state.couple[0]] };
+                                    }
+                                }
+                            });
+                            state.couple.map((id) => {
+                                _playersWithRole = _playersWithRole.map((e) => {
+                                    if (e.id !== id) {
+                                        return e;
+                                    } else if (e.lives > 0) {
+                                        state.died = [
+                                            ...state.died,
+                                            {
+                                                day: state.day,
+                                                type: state.currentStep.type,
+                                                id: e.id,
+                                                name: 'killCouple',
+                                                message: 'đã chết vì người yêu bị giết',
+                                            },
+                                        ];
+                                        return { ...e, lives: e.lives - 2 };
+                                    } else {
+                                        return e;
+                                    }
+                                });
+                                return 0;
+                            });
+                        }
                         return 0;
                     });
                 }
@@ -211,10 +359,7 @@ const wereWolfSlice = createSlice({
                 } else {
                     state.oldManLive = true;
                 }
-                const diseased = _playersWithRole.find((p) => p.rule === 14) || {};
-                if (diseased.lives < 1 && state.diseased === 0) {
-                    state.diseased = state.day;
-                }
+
                 if (state.hunter?.length === 2 && state.currentStep.type === 2) {
                     const checkHunterDie = _playersWithRole.find((p) => p.id === state.hunter[1]).lives < 1;
                     if (checkHunterDie) {
@@ -239,11 +384,52 @@ const wereWolfSlice = createSlice({
                                         message: 'đã chết vì bị thợ săn bắn chết',
                                     },
                                 ];
+
                                 return { ...e, lives: e.lives - 2 };
                             } else {
                                 return e;
                             }
                         });
+                        const checkCoupleDie = state.couple.reduce((p, c) => {
+                            const x = _playersWithRole.find((p) => p.id === c);
+                            return p || x.lives < 1;
+                        }, false);
+                        if (checkCoupleDie) {
+                            state.details = state.details.map((d) => {
+                                if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
+                                    return d;
+                                } else {
+                                    const die = _playersWithRole.find((p) => p.id === state.couple[0]).lives < 1;
+                                    if (die) {
+                                        return { ...d, killCouple: [state.couple[1]] };
+                                    } else {
+                                        return { ...d, killCouple: [state.couple[0]] };
+                                    }
+                                }
+                            });
+                            state.couple.map((id) => {
+                                _playersWithRole = _playersWithRole.map((e) => {
+                                    if (e.id !== id) {
+                                        return e;
+                                    } else if (e.lives > 0) {
+                                        state.died = [
+                                            ...state.died,
+                                            {
+                                                day: state.day,
+                                                type: state.currentStep.type,
+                                                id: e.id,
+                                                name: 'killCouple',
+                                                message: 'đã chết vì người yêu bị giết',
+                                            },
+                                        ];
+                                        return { ...e, lives: e.lives - 2 };
+                                    } else {
+                                        return e;
+                                    }
+                                });
+                                return 0;
+                            });
+                        }
                     } else {
                         _playersWithRole = _playersWithRole.map((e) => {
                             if (e.id !== state.hunter[0]) {
@@ -257,48 +443,31 @@ const wereWolfSlice = createSlice({
                                 return e;
                             }
                         });
-                    }
-                }
-                if (state.couple?.length === 2) {
-                    const checkCoupleDie = state.couple.reduce((p, c) => {
-                        const x = _playersWithRole.find((p) => p.id === c);
-                        return p || x.lives < 1;
-                    }, false);
-                    if (checkCoupleDie) {
-                        state.details = state.details.map((d) => {
-                            if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
-                                return d;
-                            } else {
-                                const die = _playersWithRole.find((p) => p.id === state.couple[0]).lives < 1;
-                                if (die) {
-                                    return { ...d, killCouple: [state.couple[1]] };
-                                } else {
-                                    return { ...d, killCouple: [state.couple[0]] };
-                                }
-                            }
+                        const _detail = state.details.find((d) => {
+                            return d.id === `${state.day}.${state.currentStep.type}.wolf`.trim();
                         });
-                        state.couple.map((id) => {
-                            _playersWithRole = _playersWithRole.map((e) => {
-                                if (e.id !== id) {
-                                    return e;
-                                } else if (e.lives > 0) {
-                                    state.died = [
-                                        ...state.died,
-                                        {
-                                            day: state.day,
-                                            type: state.currentStep.type,
-                                            id: e.id,
-                                            name: 'killCouple',
-                                            message: 'đã chết vì người yêu bị giết',
-                                        },
-                                    ];
-                                    return { ...e, lives: e.lives - 2 };
-                                } else {
-                                    return e;
-                                }
+                        if (state.couple.find((c) => c === _detail?.killByhunter[0])) {
+                            state.couple.map((id) => {
+                                _playersWithRole = _playersWithRole.map((e) => {
+                                    if (e.id !== id) {
+                                        return e;
+                                    } else if (e.lives < 1) {
+                                        state.died = state.died.filter((d) => {
+                                            return !(
+                                                d.day === state.day &&
+                                                d.type === state.currentStep.type &&
+                                                d.id === e.id &&
+                                                d.name === 'killCouple'
+                                            );
+                                        });
+                                        return { ...e, lives: e.lives + 2 };
+                                    } else {
+                                        return e;
+                                    }
+                                });
+                                return 0;
                             });
-                            return 0;
-                        });
+                        }
                     }
                 }
 
@@ -388,6 +557,7 @@ const wereWolfSlice = createSlice({
                         name: 'endday',
                         title: 'Chuẩn bị cho ngày mới',
                         time: 0,
+                        action: [],
                     },
                 ];
             }

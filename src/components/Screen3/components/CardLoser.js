@@ -17,8 +17,9 @@ const CardLoser = ({ data }) => {
             return !preState;
         });
     };
+
     return (
-        <Card onClick={handleClick} sx={{ maxWidth: 345, height: 320 }} key={data.id}>
+        <Card onClick={handleClick} sx={{ maxWidth: 400, height: '100%' }} key={data.id}>
             <ReactCardFlip style isFlipped={isFlipped} flipDirection="horizontal">
                 <div>
                     <CardMedia
@@ -28,7 +29,14 @@ const CardLoser = ({ data }) => {
                         alt="avatar"
                         align-items="flex-end"
                     />
-                    <Typography gutterBottom variant="h5" component="div" marginTop="0.5em" sx={{ textAlign: 'center', alignContent: 'center' }}>
+                    <Typography
+                        wordBreak="break-word"
+                        gutterBottom
+                        variant="h5"
+                        component="div"
+                        marginTop="0.5em"
+                        sx={{ textAlign: 'center', alignContent: 'center' }}
+                    >
                         {data.name}
                     </Typography>
                 </div>
@@ -50,18 +58,16 @@ const CardLoser = ({ data }) => {
 const Projects = () => {
     const playersWithRole = useSelector(wereWolfSelector.playersWithRole);
     const died = useSelector(wereWolfSelector.died);
-
     const _playersWithRole = playersWithRole.map((p) => {
         const x = died.find((x) => x.id === p.id);
         return { ...p, die: x };
     });
-
     return (
         <div style={{ margin: 'auto' }} className="Projects">
-            <Grid container spacing={3} justifyContent="center" textAlign="center">
-                {_playersWithRole?.length !== 0 &&
+            <Grid container spacing={3} justifyContent="center" textAlign="center" className="box-center">
+                {_playersWithRole.length !== 0 &&
                     _playersWithRole.map((item, index) => (
-                        <Grid item xs={6} sm={6} alignItems="center" key={`card-${index}`}>
+                        <Grid item xs={6} sm={6} alignItems="center" key={`card-${index}`} justifyContent="center">
                             <CardLoser data={item} />
                         </Grid>
                     ))}

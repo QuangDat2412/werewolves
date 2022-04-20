@@ -3,9 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Button, Col, Popconfirm } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { wereWolfSelector, wereWolfActions } from '../../redux/wereWolf.slice';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { useNavigate } from 'react-router-dom';
+import { Collapse } from 'antd';
 
+const { Panel } = Collapse;
 const Controls = () => {
     const dispatch = useDispatch();
     let navigate = useNavigate();
@@ -73,103 +74,6 @@ const Controls = () => {
         return { ...p, [n]: { night: filterByType2, day: filterByType1 } };
     }, {});
 
-    const showData = () => {
-        return (
-            <>
-                {Object.keys(result).map((key1, index1) => {
-                    const filterDiedByDay = died.filter((d) => d.day === parseInt(key1)) || [];
-                    return (
-                        <li key={index1}>
-                            {`Ngày thứ ${key1}`}
-                            {Object.keys(result[key1]).map((key2, index2) => {
-                                return (
-                                    <div key={index2}>
-                                        {result[key1][key2].length > 0 && (
-                                            <>
-                                                {key2 === 'day' && 'Ngày'}
-                                                {key2 === 'night' && 'Đêm'}
-                                                {result[key1][key2].map((d, index3) => {
-                                                    const a = [
-                                                        ...d.coupleByCupid,
-                                                        ...d.killCouple,
-                                                        ...d.selectByhunter,
-                                                        ...d.helpByGuard,
-                                                        ...d.killByAgree,
-                                                        ...d.killBywolf,
-                                                        ...d.killBywitch,
-                                                        ...d.killByhunter,
-                                                        ...d.helpByWitch,
-                                                    ];
-                                                    return (
-                                                        <div key={index3}>
-                                                            {a.length > 0 && (
-                                                                <ol style={{ padding: 0 }}>
-                                                                    {d.coupleByCupid?.length === 2 && (
-                                                                        <li>{`${getPlayer(d.coupleByCupid[0])} được ghép đôi với ${getPlayer(
-                                                                            d.coupleByCupid[1]
-                                                                        )}`}</li>
-                                                                    )}
-                                                                    {d.killCouple?.length === 2 && (
-                                                                        <li>{`${getPlayer(d.killCouple[0])} và ${getPlayer(
-                                                                            d.killCouple[1]
-                                                                        )} đã chết cùng nhau`}</li>
-                                                                    )}
-                                                                    {d.selectByhunter?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.selectByhunter[0])} được chọn bởi thợ săn`}</li>
-                                                                    )}
-                                                                    {d.helpByGuard?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.helpByGuard[0])} đã được bảo vệ.`}</li>
-                                                                    )}
-                                                                    {d.killByAgree?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.killByAgree[0])} đã bị dân làng treo cổ`}</li>
-                                                                    )}
-                                                                    {d.killBywolf?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.killBywolf[0])} đã bị sói cắn`}</li>
-                                                                    )}
-                                                                    {d.killBywitch?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.killBywitch[0])} đã bị giết bởi phù thủy`}</li>
-                                                                    )}
-                                                                    {d.killByHunter?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.killByHunter[0])} bị thợ săn bắn chết`}</li>
-                                                                    )}
-                                                                    {d.helpByWitch?.length > 0 && (
-                                                                        <li>{`${getPlayer(d.helpByWitch[0])} đã được cứu bởi phù thủy`}</li>
-                                                                    )}
-                                                                </ol>
-                                                            )}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                            <div style={{ color: 'red' }}>
-                                {filterDiedByDay.length > 0 && (
-                                    <>
-                                        {`Tổng kết ngày thứ ${key1}`}
-                                        {filterDiedByDay.map((d, idx) => {
-                                            return (
-                                                <ol style={{ padding: 0 }} key={idx}>
-                                                    {d.name === 'wolfKillYoungStrongMan' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
-                                                    {d.name === 'killCouple' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
-                                                    {d.name === 'killByAgree' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
-                                                    {d.name === 'killBywolf' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
-                                                    {d.name === 'killBywitch' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
-                                                    {d.name === 'killByhunter' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
-                                                </ol>
-                                            );
-                                        })}
-                                    </>
-                                )}
-                            </div>
-                        </li>
-                    );
-                })}
-            </>
-        );
-    };
     return (
         <>
             <div className="controls-btn">
@@ -189,12 +93,99 @@ const Controls = () => {
             <Col md={6} xs={24}>
                 <div className="countdown">{currentStep.title + ' trong ' + time + 's'}</div>
                 <div className="content">
-                    <div>Note: {currentStep.desc}</div>
-                    <InfiniteScroll dataLength={details?.length} scrollableTarget="scrollableDiv">
-                        <ul className="media-list stack-media-on-mobile" style={{ height: 250 }}>
-                            {showData()}
-                        </ul>
-                    </InfiniteScroll>
+                    <div style={{ marginBottom: 20 }}>Note: {currentStep.desc}</div>
+                    <Collapse defaultActiveKey={[1]}>
+                        {Object.keys(result).map((key1, index1) => {
+                            const filterDiedByDay = died.filter((d) => d.day === parseInt(key1)) || [];
+                            return (
+                                <Panel key={index1 + 1} header={`Ngày thứ ${key1}`}>
+                                    {Object.keys(result[key1]).map((key2, index2) => {
+                                        return (
+                                            <div key={index2}>
+                                                {result[key1][key2].length > 0 && (
+                                                    <>
+                                                        {key2 === 'day' && 'Ngày'}
+                                                        {key2 === 'night' && 'Đêm'}
+                                                        {result[key1][key2].map((d, index3) => {
+                                                            const a = [
+                                                                ...d.coupleByCupid,
+                                                                ...d.killCouple,
+                                                                ...d.selectByhunter,
+                                                                ...d.helpByGuard,
+                                                                ...d.killByAgree,
+                                                                ...d.killBywolf,
+                                                                ...d.killBywitch,
+                                                                ...d.killByhunter,
+                                                                ...d.helpByWitch,
+                                                            ];
+                                                            return (
+                                                                <div key={index3}>
+                                                                    {a.length > 0 && (
+                                                                        <ul style={{ padding: 0 }}>
+                                                                            {d.coupleByCupid?.length === 2 && (
+                                                                                <li>{`${getPlayer(d.coupleByCupid[0])} được ghép đôi với ${getPlayer(
+                                                                                    d.coupleByCupid[1]
+                                                                                )}`}</li>
+                                                                            )}
+                                                                            {d.killCouple?.length === 2 && (
+                                                                                <li>{`${getPlayer(d.killCouple[0])} và ${getPlayer(
+                                                                                    d.killCouple[1]
+                                                                                )} đã chết cùng nhau`}</li>
+                                                                            )}
+                                                                            {d.selectByhunter?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.selectByhunter[0])} được chọn bởi thợ săn`}</li>
+                                                                            )}
+                                                                            {d.helpByGuard?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.helpByGuard[0])} đã được bảo vệ.`}</li>
+                                                                            )}
+                                                                            {d.killByAgree?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.killByAgree[0])} đã bị dân làng treo cổ`}</li>
+                                                                            )}
+                                                                            {d.killBywolf?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.killBywolf[0])} đã bị sói cắn`}</li>
+                                                                            )}
+                                                                            {d.killBywitch?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.killBywitch[0])} đã bị giết bởi phù thủy`}</li>
+                                                                            )}
+                                                                            {d.killByHunter?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.killByHunter[0])} bị thợ săn bắn chết`}</li>
+                                                                            )}
+                                                                            {d.helpByWitch?.length > 0 && (
+                                                                                <li>{`${getPlayer(d.helpByWitch[0])} đã được cứu bởi phù thủy`}</li>
+                                                                            )}
+                                                                        </ul>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                    <div style={{ color: 'red' }}>
+                                        {filterDiedByDay.length > 0 && (
+                                            <>
+                                                {`Tổng kết ngày thứ ${key1}`}
+                                                {filterDiedByDay.map((d, idx) => {
+                                                    return (
+                                                        <ol style={{ padding: 0 }} key={idx}>
+                                                            {d.name === 'wolfKillYoungStrongMan' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
+                                                            {d.name === 'killCouple' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
+                                                            {d.name === 'killByAgree' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
+                                                            {d.name === 'killBywolf' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
+                                                            {d.name === 'killBywitch' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
+                                                            {d.name === 'killByhunter' && <li>{`${getPlayer(d.id)} ${d.message}`}</li>}
+                                                        </ol>
+                                                    );
+                                                })}
+                                            </>
+                                        )}
+                                    </div>
+                                </Panel>
+                            );
+                        })}
+                    </Collapse>
                 </div>
             </Col>
         </>
