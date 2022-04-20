@@ -16,7 +16,7 @@ const Controls = () => {
     const details = useSelector(wereWolfSelector.details);
     const steps = useSelector(wereWolfSelector.steps);
     const [time, setTime] = useState(parseInt(currentStep.time));
-
+    const [start, setStart] = useState(parseInt(false));
     const interval = useRef();
     const getPlayer = (id) => {
         const p = playersWithRole.find((p) => p.id === id);
@@ -30,6 +30,7 @@ const Controls = () => {
         } else {
             clearInterval(interval.current);
         }
+        setStart(true);
     };
     useEffect(() => {
         if (time <= 0) {
@@ -44,16 +45,20 @@ const Controls = () => {
         dispatch(wereWolfActions.doActionSuccess());
         if (index + 1 === steps?.length) {
             dispatch(wereWolfActions.setCurrentStep(steps[0]));
+            clearInterval(interval.current);
             setTime(parseInt(steps[0].time));
         } else {
             dispatch(wereWolfActions.setCurrentStep(steps[index + 1]));
+            clearInterval(interval.current);
             setTime(parseInt(steps[index + 1].time));
         }
+        setStart(false);
     };
     const reset = () => {
         dispatch(wereWolfActions.resetStep());
         clearInterval(interval.current);
         setTime(parseInt(currentStep.time));
+        setStart(false);
     };
     const endGame = () => {
         navigate('../finish', { replace: true });
@@ -174,7 +179,7 @@ const Controls = () => {
                 <Popconfirm title={`Bạn có chắc chắn muốn reset`} onConfirm={reset} okText="Yes" cancelText="No" placement="bottom">
                     <Button type="primary">Reset</Button>
                 </Popconfirm>
-                <Button onClick={countdown} type="primary">
+                <Button onClick={countdown} disabled={start} type="primary">
                     Start
                 </Button>
                 <Popconfirm title={`Bạn có chắc chắn muốn tiếp tục`} onConfirm={onChange} okText="Yes" cancelText="No" placement="bottom">
