@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { PlayerModel, DetailModel } from '../models/player.model';
+import { StepModel } from '../models/step.model';
+import { PlayerModel } from '../models/player.model';
+import { DetailModel } from '../models/detail.model';
 import { StepsNight } from '../Data';
-import { TimeModel } from '../models/time.model';
 
 const wereWolfSlice = createSlice({
     name: 'wereWolf',
@@ -24,10 +25,15 @@ const wereWolfSlice = createSlice({
     reducers: {
         setCurrentStep: (state, { payload }) => {
             state.currentStep = payload;
+            let _playersWithRole = state.playersWithRole;
+            if (payload.name === 'startday') {
+                state.day = state.day + 1;
+                state.steps = state.steps.filter((step) => !step.isFirst);
+                state.bodyguard = 0;
+            }
             const model = new DetailModel({ day: state.day, type: state.currentStep.type, name: state.currentStep.name });
             state.details = [...state.details, model];
-            let _playersWithRole = state.playersWithRole;
-            if (state.hunter?.length === 2 && state.currentStep.name === 'endday') {
+            if (state.hunter?.length === 2 && state.currentStep.name === 'startday') {
                 const checkHunterDie = _playersWithRole.find((p) => p.id === state.hunter[1]).lives < 1;
                 if (checkHunterDie) {
                     _playersWithRole = _playersWithRole.map((e) => {
@@ -97,11 +103,6 @@ const wereWolfSlice = createSlice({
                         });
                     }
                 }
-            }
-            if (payload.name === 'endday') {
-                state.day = state.day + 1;
-                state.steps = state.steps.filter((step) => !step.isFirst);
-                state.bodyguard = 0;
             }
             if (state.youngStrongMan !== 0 && state.youngStrongMan + 1 === state.day) {
                 const youngStrongMan = state.playersWithRole.find((p) => p.rule === 9) || {};
@@ -526,7 +527,7 @@ const wereWolfSlice = createSlice({
             state.players = newArray;
         },
         setDayTimerDefault: (state, { payload }) => {
-            const timers = payload.map((e) => new TimeModel(e));
+            const timers = payload.map((e) => new StepModel(e));
             state.Daytimer = timers;
         },
 
@@ -543,7 +544,7 @@ const wereWolfSlice = createSlice({
                     ...state.Daytimer,
                     {
                         type: 1,
-                        name: 'endday',
+                        name: 'startday',
                         title: 'Chuẩn bị cho ngày mới',
                         time: 0,
                     },
@@ -554,7 +555,7 @@ const wereWolfSlice = createSlice({
                     ...StepsNight,
                     {
                         type: 1,
-                        name: 'endday',
+                        name: 'startday',
                         title: 'Chuẩn bị cho ngày mới',
                         time: 0,
                         action: [],

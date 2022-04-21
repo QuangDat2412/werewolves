@@ -1,10 +1,9 @@
 import { StepsDay } from '../Data';
-export class TimeModel {
+export class StepModel {
     constructor(data) {
         if (!data) {
             data = {};
         }
-
         this.name = data.name || '';
         this.time = parseInt(data.time) || 0;
         this.step = this.getStep() || {};

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack, Typography, FormControl, MenuItem, Select } from '@mui/material';
+import { Stack, FormControl, MenuItem, Select } from '@mui/material';
 import { Rule } from '../../Data';
 
 const Dropdown = ({ ruleID, formik, rule }) => {
@@ -12,11 +12,6 @@ const Dropdown = ({ ruleID, formik, rule }) => {
 
     return (
         <Stack direction="column" spacing={1}>
-            <Stack direction="row" alignItems="center" sx={{ position: 'relative' }}>
-                <Typography variant="caption" fontWeight="bold">
-                    Rules
-                </Typography>
-            </Stack>
             <FormControl>
                 <Select
                     sx={{ width: '100%' }}

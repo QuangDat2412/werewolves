@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import ReactCardFlip from 'react-card-flip';
 import { useSelector } from 'react-redux';
-import { wereWolfSelector } from '../../../redux/wereWolf.slice';
+import { wereWolfSelector } from '../../redux/wereWolf.slice';
 
 const CardLoser = ({ data }) => {
     const [isFlipped, setFlipped] = useState(false);

@@ -39,9 +39,8 @@ const RulePlayer = () => {
     let navigate = useNavigate();
 
     const players = useSelector(wereWolfSelector.players);
-    useEffect(() => {
-        dispatch(wereWolfActions.resetGame());
-    }, [dispatch]);
+
+
     const formik = useFormik({
         initialValues: players ? players : [],
         onSubmit: (values) => {
@@ -51,6 +50,12 @@ const RulePlayer = () => {
     });
 
     const { handleSubmit, values } = formik;
+
+
+    useEffect(() => {
+        dispatch(wereWolfActions.resetGame());
+    }, [dispatch]);
+
 
     return (
         <FormikProvider value={formik}>
@@ -78,7 +83,7 @@ const RulePlayer = () => {
                                             <Table aria-label="customized table">
                                                 <TableHead>
                                                     <TableRow sx={{ fontSize: '16px' }}>
-                                                        <StyledTableCell align="center">ID</StyledTableCell>
+                                                        <StyledTableCell align="center" sx={{width:'1em'}}>ID</StyledTableCell>
                                                         <StyledTableCell align="center">Player</StyledTableCell>
                                                         <StyledTableCell align="center">Rule</StyledTableCell>
                                                     </TableRow>
@@ -87,7 +92,7 @@ const RulePlayer = () => {
                                                 <TableBody>
                                                     {values.map((item, index) => (
                                                         <TableRow key={item.id}>
-                                                            <StyledTableCell align="center">{index + 1}</StyledTableCell>
+                                                            <StyledTableCell align="center" sx={{width:'1em'}}>{index + 1}</StyledTableCell>
                                                             <StyledTableCell align="center">{item.name}</StyledTableCell>
                                                             <StyledTableCell align="center">
                                                                 <Dropdown ruleID={item.id} formik={formik} rule={item.rule} />

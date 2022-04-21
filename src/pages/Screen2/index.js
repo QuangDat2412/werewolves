@@ -1,4 +1,4 @@
-import './screen2.css';
+import './index.css';
 import Controls from '../../components/Controls';
 import ListPLayer from '../../components/ListPLayer';
 import NightImg from '../../assets/images/background.png';
