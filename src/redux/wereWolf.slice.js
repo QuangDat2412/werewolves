@@ -26,83 +26,13 @@ const wereWolfSlice = createSlice({
         setCurrentStep: (state, { payload }) => {
             state.currentStep = payload;
             let _playersWithRole = state.playersWithRole;
+            const model = new DetailModel({ day: state.day, type: state.currentStep.type, name: state.currentStep.name });
+            state.details = [...state.details, model];
             if (payload.name === 'startday') {
                 state.day = state.day + 1;
                 state.steps = state.steps.filter((step) => !step.isFirst);
                 state.bodyguard = 0;
-            }
-            const model = new DetailModel({ day: state.day, type: state.currentStep.type, name: state.currentStep.name });
-            state.details = [...state.details, model];
-            if (state.hunter?.length === 2 && state.currentStep.name === 'startday') {
-                const checkHunterDie = _playersWithRole.find((p) => p.id === state.hunter[1]).lives < 1;
-                if (checkHunterDie) {
-                    _playersWithRole = _playersWithRole.map((e) => {
-                        if (e.id !== state.hunter[0]) {
-                            return e;
-                        } else if (e.lives > 0) {
-                            state.details = state.details.map((d) => {
-                                if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
-                                    return d;
-                                } else {
-                                    return { ...d, killByhunter: [state.hunter[0]] };
-                                }
-                            });
-                            state.died = [
-                                ...state.died,
-                                {
-                                    day: state.day,
-                                    type: state.currentStep.type,
-                                    id: e.id,
-                                    name: 'killByhunter',
-                                    message: 'đã chết vì bị thợ săn bắn chết',
-                                },
-                            ];
-                            return { ...e, lives: e.lives - 2 };
-                        } else {
-                            return e;
-                        }
-                    });
-                    const checkCoupleDie = state.couple.reduce((p, c) => {
-                        const x = _playersWithRole.find((p) => p.id === c);
-                        return p || x.lives < 1;
-                    }, false);
-                    if (checkCoupleDie) {
-                        state.details = state.details.map((d) => {
-                            if (d.id !== `${state.day}.${state.currentStep.type}.${state.currentStep.name}`.trim()) {
-                                return d;
-                            } else {
-                                const die = _playersWithRole.find((p) => p.id === state.couple[0]).lives < 1;
-                                if (die) {
-                                    return { ...d, killCouple: [state.couple[1]] };
-                                } else {
-                                    return { ...d, killCouple: [state.couple[0]] };
-                                }
-                            }
-                        });
-                        state.couple.map((id) => {
-                            _playersWithRole = _playersWithRole.map((e) => {
-                                if (e.id !== id) {
-                                    return e;
-                                } else if (e.lives > 0) {
-                                    state.died = [
-                                        ...state.died,
-                                        {
-                                            day: state.day,
-                                            type: state.currentStep.type,
-                                            id: e.id,
-                                            name: 'killCouple',
-                                            message: 'đã chết vì người yêu bị giết',
-                                        },
-                                    ];
-                                    return { ...e, lives: e.lives - 2 };
-                                } else {
-                                    return e;
-                                }
-                            });
-                            return 0;
-                        });
-                    }
-                }
+                state.hunter = [];
             }
             if (state.youngStrongMan !== 0 && state.youngStrongMan + 1 === state.day) {
                 const youngStrongMan = state.playersWithRole.find((p) => p.rule === 9) || {};
